@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analyze Article - TrueLens AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "danger": "#DC2626",
+                "on-primary-container": "#eeefff",
+                "surface-container": "#eaedff",
+                "on-surface-variant": "#434655",
+                "secondary-fixed-dim": "#d2bbff",
+                "inverse-surface": "#283044",
+                "success": "#16A34A",
+                "on-tertiary-container": "#ffede6",
+                "primary-fixed-dim": "#b4c5ff",
+                "primary": "#004ac6",
+                "on-secondary-fixed-variant": "#5a00c6",
+                "on-error": "#ffffff",
+                "inverse-primary": "#b4c5ff",
+                "on-background": "#131b2e",
+                "surface-dim": "#d2d9f4",
+                "surface": "#faf8ff",
+                "border-subtle": "#E2E8F0",
+                "error-container": "#ffdad6",
+                "on-primary-fixed": "#00174b",
+                "background": "#faf8ff",
+                "warning": "#F59E0B",
+                "error": "#ba1a1a",
+                "surface-primary": "#FFFFFF",
+                "on-error-container": "#93000a",
+                "on-secondary-fixed": "#25005a",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f2f3ff",
+                "surface-container-lowest": "#ffffff",
+                "secondary-container": "#8a4cfc",
+                "secondary": "#712ae2",
+                "surface-container-high": "#e2e7ff",
+                "secondary-fixed": "#eaddff",
+                "on-tertiary": "#ffffff",
+                "surface-tint": "#0053db",
+                "surface-bright": "#faf8ff",
+                "outline": "#737686",
+                "surface-variant": "#dae2fd",
+                "on-secondary-container": "#fffbff",
+                "inverse-on-surface": "#eef0ff",
+                "primary-fixed": "#dbe1ff",
+                "on-primary-fixed-variant": "#003ea8",
+                "tertiary-fixed-dim": "#ffb596",
+                "tertiary-fixed": "#ffdbcd",
+                "tertiary": "#943700",
+                "surface-container-highest": "#dae2fd",
+                "on-tertiary-fixed": "#360f00",
+                "outline-variant": "#c3c6d7",
+                "text-muted": "#64748B",
+                "primary-container": "#2563eb",
+                "tertiary-container": "#bc4800",
+                "on-secondary": "#ffffff",
+                "on-tertiary-fixed-variant": "#7d2d00",
+                "on-surface": "#131b2e",
+                "surface-secondary": "#F8FAFC"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "stack-sm": "0.5rem",
+                "stack-md": "1rem",
+                "margin-mobile": "1rem",
+                "margin-desktop": "2.5rem",
+                "gutter": "1.5rem",
+                "container-max": "1280px",
+                "stack-lg": "2rem"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "headline-lg-mobile": [
+                        "Inter"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-lg": [
+                        "Inter"
+                ],
+                "display": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "40px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display": [
+                        "64px",
+                        {
+                                "lineHeight": "72px",
+                                "letterSpacing": "-0.04em",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+    body {
+        background-color: theme('colors.surface');
+        color: theme('colors.on-surface');
+    }
+    .glass-card {
+        background-color: theme('colors.surface-primary');
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04), 0 4px 6px -2px rgba(0,0,0,0.02);
+        border: 1px solid theme('colors.border-subtle');
+        border-radius: 20px;
+    }
+</style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md bg-surface text-on-surface">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-md border-b border-border-subtle shadow-sm flex justify-between items-center px-margin-desktop h-20 max-w-container-max mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight">TrueLens</span>
+<div class="hidden md:flex gap-6">
+<a class="font-label-md text-label-md text-text-muted hover:text-primary transition-colors" href="#">Platform</a>
+<a class="font-label-md text-label-md text-text-muted hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="font-label-md text-label-md text-text-muted hover:text-primary transition-colors" href="#">Resources</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-label-md text-label-md text-text-muted hover:text-primary transition-colors px-4 py-2">View Demo</button>
+<button class="font-label-md text-label-md bg-primary-container text-on-primary-container rounded-lg px-6 py-2 hover:bg-surface-tint transition-colors active:scale-95 duration-200">Analyze Article</button>
+</div>
+</nav>
+<main class="flex-grow pt-32 pb-24 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full flex flex-col items-center">
+<div class="text-center mb-stack-lg w-full max-w-2xl">
+<h1 class="font-display text-display text-on-surface mb-stack-sm">Analyze Article</h1>
+<p class="font-body-lg text-body-lg text-text-muted">Uncover bias, verify facts, and reveal the truth behind the news.</p>
+</div>
+<div class="w-full max-w-3xl glass-card p-8 md:p-12 transition-all duration-300">
+<!-- Tabs -->
+<div class="flex justify-center mb-stack-lg">
+<div class="bg-surface-secondary rounded-lg p-1 flex w-64 border border-border-subtle relative">
+<!-- Active Indicator (Simulated Framer Motion) -->
+<div class="absolute left-1 top-1 bottom-1 w-[calc(50%-4px)] bg-surface-primary rounded shadow-sm border border-border-subtle transition-transform duration-300 ease-in-out" id="tab-indicator"></div>
+<button class="flex-1 relative z-10 py-2 font-label-md text-label-md text-primary font-medium transition-colors" id="tab-btn-url" onclick="switchTab('url')">News URL</button>
+<button class="flex-1 relative z-10 py-2 font-label-md text-label-md text-text-muted transition-colors" id="tab-btn-pdf" onclick="switchTab('pdf')">PDF Upload</button>
+</div>
+</div>
+<!-- URL Input View -->
+<div class="w-full transition-opacity duration-300 opacity-100" id="view-url">
+<div class="relative flex items-center mb-stack-md">
+<span class="material-symbols-outlined absolute left-4 text-text-muted">link</span>
+<input class="w-full bg-surface-secondary border border-border-subtle rounded-[20px] py-4 pl-12 pr-36 focus:outline-none focus:ring-2 focus:ring-primary/20 font-body-md text-body-md text-on-surface placeholder:text-text-muted" placeholder="Paste article URL here..." type="url"/>
+<button class="absolute right-2 top-2 bottom-2 bg-primary-container text-on-primary-container rounded-xl px-6 font-label-md text-label-md hover:bg-surface-tint transition-colors active:scale-95 flex items-center gap-2" onclick="startAnalysis()">
+                        Analyze <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="flex items-center gap-2 mt-4 text-text-muted">
+<span class="font-label-sm text-label-sm">Try examples:</span>
+<button class="font-label-sm text-label-sm hover:text-primary transition-colors border border-border-subtle rounded-full px-3 py-1 bg-surface">Tech Trends 2024</button>
+<button class="font-label-sm text-label-sm hover:text-primary transition-colors border border-border-subtle rounded-full px-3 py-1 bg-surface">Global Markets</button>
+</div>
+</div>
+<!-- PDF Upload View -->
+<div class="w-full hidden transition-opacity duration-300 opacity-0" id="view-pdf">
+<div class="border-2 border-dashed border-border-subtle rounded-[20px] bg-surface-secondary flex flex-col items-center justify-center py-16 px-4 text-center cursor-pointer hover:border-primary/50 transition-colors" id="pdf-upload-area" onclick="simulateUpload()">
+<span class="material-symbols-outlined text-4xl text-text-muted mb-4">upload_file</span>
+<p class="font-headline-md text-headline-md text-on-surface mb-2">Drag &amp; Drop your News PDF here</p>
+<p class="font-body-md text-body-md text-text-muted mb-6">or click to browse from your computer</p>
+<button class="bg-surface-primary border border-border-subtle text-on-surface font-label-md text-label-md rounded-lg px-6 py-2 shadow-sm hover:bg-surface-container-low transition-colors">Select File</button>
+</div>
+<!-- PDF Preview State (Hidden initially) -->
+<div class="hidden border border-border-subtle rounded-[20px] bg-surface-secondary p-4 flex items-center justify-between" id="pdf-preview">
+<div class="flex items-center gap-4">
+<div class="w-12 h-16 bg-error-container rounded flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-medium truncate w-48">global-tech-trends.pdf</p>
+<p class="font-label-sm text-label-sm text-text-muted">2.4 MB • 12 pages</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="font-label-sm text-label-sm text-text-muted hover:text-danger px-3 py-2 transition-colors" onclick="resetUpload()">Remove</button>
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg px-4 py-2 hover:bg-surface-tint transition-colors" onclick="startAnalysis()">Analyze</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Loading Timeline (Hidden initially) -->
+<div class="hidden w-full max-w-3xl mt-12 glass-card p-8 transition-opacity duration-500 opacity-0" id="loading-timeline">
+<h3 class="font-headline-md text-headline-md mb-8 text-center">Analyzing Document...</h3>
+<div class="flex flex-col gap-6 ml-8">
+<!-- Steps will be activated via JS -->
+<div class="flex items-center gap-4 step" id="step-1">
+<div class="w-8 h-8 rounded-full border-2 border-primary flex items-center justify-center bg-surface indicator relative">
+<span class="material-symbols-outlined text-primary text-sm icon">sync</span>
+</div>
+<span class="font-label-md text-label-md text-primary label">Uploading PDF</span>
+</div>
+<div class="flex items-center gap-4 step opacity-40" id="step-2">
+<div class="w-8 h-8 rounded-full border-2 border-border-subtle flex items-center justify-center bg-surface indicator">
+<span class="material-symbols-outlined text-text-muted text-sm icon">subject</span>
+</div>
+<span class="font-label-md text-label-md text-text-muted label">Extracting Text</span>
+</div>
+<div class="flex items-center gap-4 step opacity-40" id="step-3">
+<div class="w-8 h-8 rounded-full border-2 border-border-subtle flex items-center justify-center bg-surface indicator">
+<span class="material-symbols-outlined text-text-muted text-sm icon">psychology</span>
+</div>
+<span class="font-label-md text-label-md text-text-muted label">Running AI Analysis</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-border-subtle bg-surface">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div>
+<span class="font-headline-md text-headline-md font-bold text-primary block mb-4">TrueLens</span>
+<p class="font-body-md text-body-md text-text-muted">© 2024 TrueLens AI. Truth through transparency.</p>
+</div>
+<div></div><div></div>
+<div class="flex flex-col gap-2">
+<a class="font-label-sm text-label-sm text-text-muted hover:text-primary transition-colors" href="#">Terms</a>
+<a class="font-label-sm text-label-sm text-text-muted hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-label-sm text-label-sm text-text-muted hover:text-primary transition-colors" href="#">API</a>
+</div>
+</div>
+</footer>
+<script>
+        function switchTab(tab) {
+            const ind = document.getElementById('tab-indicator');
+            const vUrl = document.getElementById('view-url');
+            const vPdf = document.getElementById('view-pdf');
+            const btnUrl = document.getElementById('tab-btn-url');
+            const btnPdf = document.getElementById('tab-btn-pdf');
+
+            if(tab === 'url') {
+                ind.style.transform = 'translateX(0)';
+                btnUrl.classList.add('text-primary', 'font-medium');
+                btnUrl.classList.remove('text-text-muted');
+                btnPdf.classList.remove('text-primary', 'font-medium');
+                btnPdf.classList.add('text-text-muted');
+                
+                vPdf.classList.add('opacity-0');
+                setTimeout(() => {
+                    vPdf.classList.add('hidden');
+                    vUrl.classList.remove('hidden');
+                    setTimeout(() => vUrl.classList.remove('opacity-0'), 50);
+                }, 300);
+
+            } else {
+                ind.style.transform = 'translateX(100%)';
+                btnPdf.classList.add('text-primary', 'font-medium');
+                btnPdf.classList.remove('text-text-muted');
+                btnUrl.classList.remove('text-primary', 'font-medium');
+                btnUrl.classList.add('text-text-muted');
+
+                vUrl.classList.add('opacity-0');
+                setTimeout(() => {
+                    vUrl.classList.add('hidden');
+                    vPdf.classList.remove('hidden');
+                    setTimeout(() => vPdf.classList.remove('opacity-0'), 50);
+                }, 300);
+            }
+        }
+
+        function simulateUpload() {
+            document.getElementById('pdf-upload-area').classList.add('hidden');
+            document.getElementById('pdf-preview').classList.remove('hidden');
+            document.getElementById('pdf-preview').classList.add('flex');
+        }
+
+        function resetUpload() {
+            document.getElementById('pdf-preview').classList.add('hidden');
+            document.getElementById('pdf-preview').classList.remove('flex');
+            document.getElementById('pdf-upload-area').classList.remove('hidden');
+        }
+
+        function startAnalysis() {
+            const timeline = document.getElementById('loading-timeline');
+            timeline.classList.remove('hidden');
+            setTimeout(() => timeline.classList.remove('opacity-0'), 50);
+            
+            // Simple simulation
+            setTimeout(() => completeStep(1), 1000);
+            setTimeout(() => { activateStep(2); }, 1100);
+            setTimeout(() => completeStep(2), 2500);
+            setTimeout(() => { activateStep(3); }, 2600);
+        }
+
+        function completeStep(stepNum) {
+            const step = document.getElementById(`step-${stepNum}`);
+            const icon = step.querySelector('.icon');
+            const ind = step.querySelector('.indicator');
+            icon.textContent = 'check';
+            icon.classList.add('text-success');
+            icon.classList.remove('text-primary');
+            ind.classList.add('border-success');
+            ind.classList.remove('border-primary');
+        }
+
+        function activateStep(stepNum) {
+            const step = document.getElementById(`step-${stepNum}`);
+            step.classList.remove('opacity-40');
+            const label = step.querySelector('.label');
+            const icon = step.querySelector('.icon');
+            const ind = step.querySelector('.indicator');
+            
+            label.classList.remove('text-text-muted');
+            label.classList.add('text-primary');
+            icon.classList.remove('text-text-muted');
+            icon.classList.add('text-primary');
+            ind.classList.remove('border-border-subtle');
+            ind.classList.add('border-primary');
+            icon.textContent = 'sync';
+        }
+    </script>
+</body></html>
