@@ -1,0 +1,257 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#283044",
+                        "background": "#faf8ff",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary": "#712ae2",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-low": "#f2f3ff",
+                        "text-muted": "#64748B",
+                        "success": "#16A34A",
+                        "warning": "#F59E0B",
+                        "on-primary": "#ffffff",
+                        "surface-primary": "#FFFFFF",
+                        "on-secondary-fixed": "#25005a",
+                        "surface-container-highest": "#dae2fd",
+                        "surface": "#faf8ff",
+                        "on-tertiary-container": "#ffede6",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "surface-container": "#eaedff",
+                        "on-background": "#131b2e",
+                        "danger": "#DC2626",
+                        "tertiary": "#943700",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "primary": "#004ac6",
+                        "surface-container-high": "#e2e7ff",
+                        "border-subtle": "#E2E8F0",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#bc4800",
+                        "inverse-primary": "#b4c5ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-surface-variant": "#434655",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#dae2fd",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-secondary": "#F8FAFC",
+                        "outline": "#737686",
+                        "primary-container": "#2563eb",
+                        "secondary-fixed": "#eaddff",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-surface": "#131b2e",
+                        "surface-dim": "#d2d9f4",
+                        "secondary-container": "#8a4cfc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px",
+                        "2xl": "1.25rem"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "margin-mobile": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "container-max": "1280px",
+                        "margin-desktop": "2.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "display": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "label-md": ["Inter", "sans-serif"],
+                        "label-sm": ["Inter", "sans-serif"],
+                        "headline-lg-mobile": ["Inter", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script></head><body class="antialiased min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 backdrop-blur-md dark:bg-surface-dim/80 fixed top-0 w-full z-50 border-b border-border-subtle shadow-sm transition-colors duration-200">
+<div class="flex justify-between items-center px-margin-desktop h-20 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4 cursor-pointer hover:opacity-80 transition-opacity">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2PpLq_J2Wth2QV7rHMUYUgnq5oVEewmnc-njO2tQfwg89nhInyfyScVU-tB_m4kQD723-bx8Fb8H16P8GcTRPc5fgzfafZA5DKve2U_-0n-4GvpbPKAJCaYYpm5mVIFGzBaXFFMvjJ0zAOH3Rqyl2M5omsr59cpCKOZl2TnLJQsF3tNmS_iQevUvQH952GHvGG6BqxD2SNa5G6R3KnA_7lfNVvB8LtwxMgkKkfVOmtLXeYvgoQqjV" alt="TrueLens Logo" class="w-10 h-10 object-contain rounded-lg">
+<span class="font-headline-lg text-headline-lg font-bold text-primary tracking-tight hidden sm:block">TrueLens</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-label-md text-label-md">
+<a href="#" class="text-text-muted hover:text-primary transition-colors">Platform</a>
+<a href="#" class="text-text-muted hover:text-primary transition-colors">Solutions</a>
+<a href="#" class="text-text-muted hover:text-primary transition-colors">Resources</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden sm:block font-label-md text-label-md text-on-surface bg-surface-primary border border-border-subtle rounded-xl px-4 py-2 hover-lift">View Demo</button>
+<button class="font-label-md text-label-md text-on-primary bg-primary-container rounded-xl px-6 py-2 hover-lift active:scale-95 duration-200 transition-transform">Analyze Article</button>
+</div>
+</div>
+</nav>
+<main class="flex-grow pt-24 pb-20">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-margin-desktop pt-20 pb-24 text-center">
+<div class="max-w-3xl mx-auto space-y-8 animate-fade-up">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low text-primary-container font-label-sm text-label-sm border border-primary-fixed mb-4">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI-Powered News Transparency</span>
+</div>
+<h1 class="font-display text-display text-on-background tracking-tight">
+                    See Beyond the <br>
+<span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Headlines</span>
+</h1>
+<p class="font-body-lg text-body-lg text-text-muted max-w-2xl mx-auto">
+                    TrueLens uses advanced AI to instantly detect political bias, verify facts, and provide a neutral summary of any news article. Filter the noise. Find the truth.
+                </p>
+<!-- Analyze Input Bar -->
+<div class="mt-10 relative max-w-2xl mx-auto">
+<div class="flex items-center bg-surface-primary border border-border-subtle rounded-[20px] p-2 shadow-sm focus-within:ring-2 focus-within:ring-primary-container/20 focus-within:border-primary-container transition-all">
+<span class="material-symbols-outlined text-text-muted ml-3">link</span>
+<input type="text" placeholder="Paste article URL here..." class="flex-grow bg-transparent border-none focus:ring-0 font-body-md text-body-md px-4 outline-none text-on-background placeholder:text-text-muted">
+<button class="font-label-md text-label-md text-on-primary bg-primary-container rounded-[12px] px-6 py-3 hover-lift shadow-sm flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                            Analyze Article
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Features Section -->
+<section class="max-w-container-max mx-auto px-margin-desktop py-20 bg-surface-secondary rounded-[32px]">
+<div class="text-center mb-16 animate-fade-up">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-4">Comprehensive Analysis</h2>
+<p class="font-body-md text-body-md text-text-muted">Four powerful lenses to evaluate every story.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[280px]">
+<!-- Political Bias (Spans 2 columns) -->
+<div class="md:col-span-2 bg-surface-primary rounded-[20px] border border-border-subtle p-8 soft-shadow hover-lift flex flex-col justify-between animate-fade-up delay-100 group">
+<div class="flex justify-between items-start">
+<div>
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-primary-container mb-4 group-hover:bg-primary-container group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">balance</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mb-2">Political Bias Detection</h3>
+<p class="font-body-md text-body-md text-text-muted max-w-sm">Identifies subtle framing, loaded language, and partisan leaning in the text.</p>
+</div>
+<div class="hidden sm:block">
+<!-- Minimalist gauge visual -->
+<svg width="100" height="100" viewBox="0 0 100 100">
+<path d="M 10 90 A 40 40 0 0 1 90 90" fill="none" stroke="#E2E8F0" stroke-width="8" stroke-linecap="round"></path>
+<path d="M 10 90 A 40 40 0 0 1 50 50" fill="none" stroke="#2563EB" stroke-width="8" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="20"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Fact Check (1 column) -->
+<div class="bg-surface-primary rounded-[20px] border border-border-subtle p-8 soft-shadow hover-lift flex flex-col justify-between animate-fade-up delay-200 group">
+<div>
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-secondary mb-4 group-hover:bg-secondary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">fact_check</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mb-2">Fact Verification</h3>
+<p class="font-body-md text-body-md text-text-muted">Cross-references claims against trusted global databases.</p>
+</div>
+</div>
+<!-- Trust Score (1 column) -->
+<div class="bg-surface-primary rounded-[20px] border border-border-subtle p-8 soft-shadow hover-lift flex flex-col justify-between animate-fade-up delay-200 group">
+<div>
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-success mb-4 group-hover:bg-success group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mb-2">Source Trust Score</h3>
+<p class="font-body-md text-body-md text-text-muted">Evaluates author history and publication reliability metrics.</p>
+</div>
+</div>
+<!-- Neutral Summary (Spans 2 columns) -->
+<div class="md:col-span-2 bg-surface-primary rounded-[20px] border border-border-subtle p-8 soft-shadow hover-lift flex flex-col justify-between animate-fade-up delay-300 group">
+<div>
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant mb-4 group-hover:bg-on-surface-variant group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined">summarize</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-background mb-2">Neutral Summary Generation</h3>
+<p class="font-body-md text-body-md text-text-muted max-w-2xl">Strips away emotive language and editorializing to present just the core facts of the story in a concise, objective format.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works Section -->
+<section class="max-w-container-max mx-auto px-margin-desktop py-24">
+<div class="text-center mb-16 animate-fade-up">
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-4">How It Works</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+<!-- Connecting Line (Desktop) -->
+<div class="hidden md:block absolute top-12 left-[15%] right-[15%] h-[1px] bg-border-subtle z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center text-center animate-fade-up delay-100">
+<div class="w-16 h-16 rounded-full bg-surface-primary border border-border-subtle shadow-sm flex items-center justify-center font-headline-md text-headline-md text-primary mb-6">1</div>
+<h4 class="font-headline-md text-headline-md text-on-background mb-3">Paste URL</h4>
+<p class="font-body-md text-body-md text-text-muted">Simply paste the link to any news article or opinion piece you want to verify.</p>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center text-center animate-fade-up delay-200">
+<div class="w-16 h-16 rounded-full bg-surface-primary border border-border-subtle shadow-sm flex items-center justify-center font-headline-md text-headline-md text-primary mb-6">2</div>
+<h4 class="font-headline-md text-headline-md text-on-background mb-3">AI Analysis</h4>
+<p class="font-body-md text-body-md text-text-muted">Our models instantly scan the text for bias, logical fallacies, and factual accuracy.</p>
+</div>
+<!-- Step-->
+<div class="relative z-10 flex flex-col items-center text-center animate-fade-up delay-300">
+<div class="w-16 h-16 rounded-full bg-surface-primary border border-border-subtle shadow-sm flex items-center justify-center font-headline-md text-headline-md text-primary mb-6">3</div>
+<h4 class="font-headline-md text-headline-md text-on-background mb-3">Transparency Report</h4>
+<p class="font-body-md text-body-md text-text-muted">Receive a comprehensive, easy-to-read dashboard detailing the article's profile.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 border-t border-border-subtle dark:border-outline-variant bg-surface dark:bg-inverse-surface mt-auto">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="col-span-1 md:col-span-2">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim mb-4 flex items-center gap-2">
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2PpLq_J2Wth2QV7rHMUYUgnq5oVEewmnc-njO2tQfwg89nhInyfyScVU-tB_m4kQD723-bx8Fb8H16P8GcTRPc5fgzfafZA5DKve2U_-0n-4GvpbPKAJCaYYpm5mVIFGzBaXFFMvjJ0zAOH3Rqyl2M5omsr59cpCKOZl2TnLJQsF3tNmS_iQevUvQH952GHvGG6BqxD2SNa5G6R3KnA_7lfNVvB8LtwxMgkKkfVOmtLXeYvgoQqjV" alt="TrueLens Logo" class="w-6 h-6 object-contain">
+                    TrueLens AI
+                 </div>
+<p class="font-body-md text-body-md text-text-muted">© 2024 TrueLens AI. Truth through transparency.</p>
+</div>
+<div class="flex flex-col gap-3">
+<a href="#" class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors">Terms</a>
+<a href="#" class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors">Privacy</a>
+<a href="#" class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors">Security</a>
+</div>
+<div class="flex flex-col gap-3">
+<a class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors" href="#">Contact</a>
+<a class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors" href="#">API</a>
+<a class="font-label-sm text-label-sm text-text-muted dark:text-outline hover:text-primary transition-colors" href="#">Documentation</a>
+</div>
+</div>
+</footer>
+</body></html>
