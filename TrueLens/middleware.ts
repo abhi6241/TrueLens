@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 const isClerkConfigured = clerkKey && clerkKey.startsWith('pk_') && !clerkKey.includes('placeholder');
 
-// Protect /dashboard routes using resource-based auth (no createRouteMatcher)
+// Protect /dashboard routes using inline pathname check (createRouteMatcher is deprecated)
 export default isClerkConfigured
   ? clerkMiddleware(async (auth, req: NextRequest) => {
       const { pathname } = req.nextUrl;
@@ -13,7 +13,7 @@ export default isClerkConfigured
         await auth.protect();
       }
     })
-  : (req: NextRequest) => {
+  : (_req: NextRequest) => {
       // Bypass Clerk when keys are not configured
       return NextResponse.next();
     };
