@@ -18,7 +18,7 @@ export default function DashboardHome() {
         setIsLoading(true);
         const [statsData, analysesData] = await Promise.all([
           api.getDashboardStats(),
-          api.listAnalyses()
+          api.listAnalyses({ limit: 5 })
         ]);
         setStats(statsData);
         setAnalyses(analysesData);
@@ -87,7 +87,7 @@ export default function DashboardHome() {
           </div>
           <div>
             <p className="font-label-md text-label-md text-text-muted mb-1">Total Analyzed</p>
-            <h3 className="font-display text-display text-on-surface">{stats?.total_analyzed.toLocaleString() || '1,248'}</h3>
+            <h3 className="font-display text-display text-on-surface">{stats?.total_analyzed.toLocaleString() || '0'}</h3>
           </div>
         </motion.div>
 
@@ -139,7 +139,7 @@ export default function DashboardHome() {
           </div>
           <div>
             <p className="font-label-md text-label-md text-text-muted mb-1">Verified Facts</p>
-            <h3 className="font-display text-display text-on-surface">{stats?.verified_facts.toLocaleString() || '8,932'}</h3>
+            <h3 className="font-display text-display text-on-surface">{stats?.verified_facts.toLocaleString() || '0'}</h3>
           </div>
         </motion.div>
 
@@ -155,7 +155,7 @@ export default function DashboardHome() {
           </div>
           <div>
             <p className="font-label-md text-label-md text-text-muted mb-1">Saved Reports</p>
-            <h3 className="font-display text-display text-on-surface">{stats?.saved_reports.toLocaleString() || '156'}</h3>
+            <h3 className="font-display text-display text-on-surface">{stats?.saved_reports.toLocaleString() || '0'}</h3>
           </div>
         </motion.div>
       </section>

@@ -77,22 +77,64 @@ export default function Sidebar() {
         </Link>
         
         {/* History */}
-        <div className="text-text-muted/50 flex items-center gap-3 px-4 py-3 border-l-4 border-transparent cursor-not-allowed">
-          <span className="material-symbols-outlined">history</span>
+        <Link 
+          href="/dashboard/history" 
+          className={`${
+            pathname === '/dashboard/history' 
+              ? 'bg-primary-container/10 text-primary font-bold border-primary' 
+              : 'text-text-muted border-transparent hover:bg-surface-container-high'
+          } flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 duration-200 ease-in-out transition-all`}
+        >
+          <span 
+            className="material-symbols-outlined" 
+            style={{ 
+              fontVariationSettings: pathname === '/dashboard/history' ? "'FILL' 1" : undefined 
+            }}
+          >
+            history
+          </span>
           History
-        </div>
+        </Link>
         
         {/* Bookmarks */}
-        <div className="text-text-muted/50 flex items-center gap-3 px-4 py-3 border-l-4 border-transparent cursor-not-allowed">
-          <span className="material-symbols-outlined">bookmark</span>
+        <Link 
+          href="/dashboard/bookmarks" 
+          className={`${
+            pathname === '/dashboard/bookmarks' 
+              ? 'bg-primary-container/10 text-primary font-bold border-primary' 
+              : 'text-text-muted border-transparent hover:bg-surface-container-high'
+          } flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 duration-200 ease-in-out transition-all`}
+        >
+          <span 
+            className="material-symbols-outlined" 
+            style={{ 
+              fontVariationSettings: pathname === '/dashboard/bookmarks' ? "'FILL' 1" : undefined 
+            }}
+          >
+            bookmark
+          </span>
           Bookmarks
-        </div>
+        </Link>
         
         {/* Reports */}
-        <div className="text-text-muted/50 flex items-center gap-3 px-4 py-3 border-l-4 border-transparent cursor-not-allowed">
-          <span className="material-symbols-outlined">assessment</span>
+        <Link 
+          href="/dashboard/reports" 
+          className={`${
+            pathname === '/dashboard/reports' 
+              ? 'bg-primary-container/10 text-primary font-bold border-primary' 
+              : 'text-text-muted border-transparent hover:bg-surface-container-high'
+          } flex items-center gap-3 px-4 py-3 rounded-lg border-l-4 duration-200 ease-in-out transition-all`}
+        >
+          <span 
+            className="material-symbols-outlined" 
+            style={{ 
+              fontVariationSettings: pathname === '/dashboard/reports' ? "'FILL' 1" : undefined 
+            }}
+          >
+            assessment
+          </span>
           Reports
-        </div>
+        </Link>
       </div>
       
       {/* Bottom Links */}

@@ -276,6 +276,89 @@ function ResultContent() {
         </motion.div>
       </section>
 
+      {/* Advanced AI Insights Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+        {/* Emotion Detection */}
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="col-span-1 md:col-span-4 bg-surface rounded-xl border border-border-subtle premium-shadow p-6 flex flex-col items-center justify-center"
+        >
+          <h3 className="font-headline-md text-headline-md text-on-surface font-semibold mb-6 self-start w-full">Dominant Emotion</h3>
+          <div className="w-24 h-24 bg-surface-secondary rounded-full flex items-center justify-center mb-4">
+            <span className="text-5xl">
+              {report.emotion.toLowerCase().includes('fear') ? '😨' : 
+               report.emotion.toLowerCase().includes('anger') ? '😡' : 
+               report.emotion.toLowerCase().includes('hope') ? '🌟' : 
+               report.emotion.toLowerCase().includes('joy') ? '😊' : 
+               report.emotion.toLowerCase().includes('sad') ? '😢' : '😐'}
+            </span>
+          </div>
+          <p className="font-headline-sm text-headline-sm font-bold text-primary">{report.emotion}</p>
+        </motion.div>
+
+        {/* Propaganda Detection */}
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="col-span-1 md:col-span-4 bg-surface rounded-xl border border-border-subtle premium-shadow p-6 flex flex-col"
+        >
+          <h3 className="font-headline-md text-headline-md text-on-surface font-semibold mb-4">Propaganda Score</h3>
+          <div className="flex items-end gap-3 mb-4">
+            <span className="font-headline-lg text-headline-lg font-bold text-on-surface text-2xl">{report.propaganda_score}</span>
+            <span className="font-label-sm text-label-sm text-text-muted mb-1">/ 100</span>
+          </div>
+          <div className="w-full bg-surface-container h-2 rounded-full overflow-hidden mb-6">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${report.propaganda_score}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className={`h-full ${report.propaganda_score > 70 ? 'bg-danger' : report.propaganda_score > 30 ? 'bg-warning' : 'bg-success'}`}
+            ></motion.div>
+          </div>
+          
+          <div className="flex-1">
+            <h4 className="font-label-sm text-label-sm text-text-muted uppercase tracking-wider mb-2">Detected Techniques</h4>
+            {report.propaganda_techniques && report.propaganda_techniques.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {report.propaganda_techniques.map((tech, i) => (
+                  <span key={i} className="px-2.5 py-1 bg-surface-secondary border border-border-subtle rounded text-xs font-medium text-on-surface-variant">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-text-muted italic">No specific techniques detected.</p>
+            )}
+          </div>
+        </motion.div>
+
+        {/* Missing Perspectives */}
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="col-span-1 md:col-span-4 bg-surface rounded-xl border border-border-subtle premium-shadow p-6 flex flex-col"
+        >
+          <h3 className="font-headline-md text-headline-md text-on-surface font-semibold mb-4">Missing Perspectives</h3>
+          <div className="flex-1 bg-surface-secondary rounded-lg p-4 border border-border-subtle overflow-y-auto max-h-[200px]">
+            {report.missing_perspectives && report.missing_perspectives.length > 0 ? (
+              <ul className="list-disc pl-4 space-y-2">
+                {report.missing_perspectives.map((perspective, i) => (
+                  <li key={i} className="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                    {perspective}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-text-muted italic">This article appears highly comprehensive with no major viewpoints omitted.</p>
+            )}
+          </div>
+        </motion.div>
+      </section>
+
       {/* AI Summary */}
       <motion.section 
         initial={{ opacity: 0, y: 15 }}
@@ -293,6 +376,26 @@ function ResultContent() {
           {report.summary}
         </p>
       </motion.section>
+
+      {/* Clean Extracted Article */}
+      {report.content && (
+        <motion.section 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="bg-surface rounded-xl border border-border-subtle premium-shadow p-8 flex flex-col gap-4"
+        >
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary">article</span>
+            <h3 className="font-headline-md text-headline-md text-on-surface font-semibold">Clean Extracted Article</h3>
+          </div>
+          <div className="w-12 h-1 bg-primary rounded-full mb-2"></div>
+          <div className="font-body-md text-body-md text-on-surface-variant leading-relaxed max-w-4xl whitespace-pre-wrap select-text">
+            {report.content}
+          </div>
+        </motion.section>
+      )}
 
       {/* Fact Checking Table */}
       <motion.section 
@@ -313,20 +416,37 @@ function ResultContent() {
             </thead>
             <tbody className="divide-y divide-border-subtle font-body-md text-body-md text-on-surface">
               {report.claims.map((claim, idx) => {
-                const isVerified = claim.status === 'Verified';
+                let statusColor = 'bg-surface-secondary';
+                let textColor = 'text-text-muted';
+                let iconName = 'help';
+                
+                if (claim.status === 'Verified') {
+                  statusColor = 'bg-success';
+                  textColor = 'text-success';
+                  iconName = 'check_circle';
+                } else if (claim.status === 'False') {
+                  statusColor = 'bg-danger';
+                  textColor = 'text-danger';
+                  iconName = 'cancel';
+                } else if (claim.status === 'Unverified') {
+                  statusColor = 'bg-warning';
+                  textColor = 'text-warning';
+                  iconName = 'error';
+                }
+
                 return (
                   <tr key={idx} className="hover:bg-surface-secondary/50 transition-colors">
                     <td className="p-4 pl-6 relative">
-                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${isVerified ? 'bg-success' : 'bg-warning'}`}></div>
+                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${statusColor}`}></div>
                       "{claim.claim}"
                     </td>
                     <td className="p-4">
                       <div className="flex items-start gap-3">
-                        <span className={`material-symbols-outlined mt-0.5 ${isVerified ? 'text-success' : 'text-warning'}`}>
-                          {isVerified ? 'check_circle' : 'error'}
+                        <span className={`material-symbols-outlined mt-0.5 ${textColor}`}>
+                          {iconName}
                         </span>
                         <div>
-                          <span className="font-semibold block mb-1">{claim.status}</span>
+                          <span className={`font-semibold block mb-1 ${textColor}`}>{claim.status}</span>
                           <span className="text-text-muted font-body-md text-body-md">
                             {claim.details}
                           </span>
@@ -340,6 +460,47 @@ function ResultContent() {
           </table>
         </div>
       </motion.section>
+
+      {/* Similar Articles */}
+      {report.similar_articles && report.similar_articles.length > 0 && (
+        <motion.section 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col gap-4"
+        >
+          <div className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary">library_books</span>
+            <h3 className="font-headline-md text-headline-md text-on-surface font-semibold">Related Coverages</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {report.similar_articles.map((article, idx) => (
+              <a 
+                key={idx} 
+                href={article.url || "#"} 
+                target={article.url ? "_blank" : "_self"} 
+                rel="noopener noreferrer"
+                className="bg-surface rounded-xl border border-border-subtle p-5 flex flex-col gap-3 hover:border-primary/50 hover:shadow-lg transition-all"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-label-sm text-label-sm text-text-muted uppercase tracking-wider">{article.publication}</span>
+                  {article.distance !== undefined && (
+                    <span className="text-xs bg-surface-secondary px-2 py-0.5 rounded text-text-muted">
+                      {Math.round((1 - article.distance) * 100)}% Match
+                    </span>
+                  )}
+                </div>
+                <h4 className="font-headline-sm text-headline-sm font-semibold text-on-surface line-clamp-2">{article.title}</h4>
+                <div className="mt-auto pt-4 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-sm text-primary">person</span>
+                  <span className="font-label-md text-label-md text-on-surface-variant">{article.author}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </motion.section>
+      )}
     </div>
   );
 }

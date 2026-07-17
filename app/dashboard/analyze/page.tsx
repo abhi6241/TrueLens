@@ -32,8 +32,11 @@ function AnalyzeForm() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [hasFile, setHasFile] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [fileSize, setFileSize] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   
   // Timeline step statuses
@@ -56,6 +59,7 @@ function AnalyzeForm() {
   const triggerAnalysisFlow = async (url: string | null, file: File | null) => {
     setIsAnalyzing(true);
     setError(null);
+    setProgress(10);
     setStepStatuses({ 1: 'active', 2: 'pending', 3: 'pending' });
 
     let apiResultId = '';
@@ -83,16 +87,19 @@ function AnalyzeForm() {
     try {
       // Simulate step 1
       await new Promise(resolve => setTimeout(resolve, 1200));
+      setProgress(45);
       setStepStatuses(prev => ({ ...prev, 1: 'completed', 2: 'active' }));
 
       // Simulate step 2
       await new Promise(resolve => setTimeout(resolve, 1500));
+      setProgress(80);
       setStepStatuses(prev => ({ ...prev, 2: 'completed', 3: 'active' }));
 
       // Wait for both step 2 simulation and API to finish
       await apiPromise;
 
       // Simulate step 3 completion
+      setProgress(100);
       setStepStatuses(prev => ({ ...prev, 3: 'completed' }));
       await new Promise(resolve => setTimeout(resolve, 500));
       
@@ -121,17 +128,60 @@ function AnalyzeForm() {
     setUrlInput(mockUrls[example] || '');
   };
 
-  const simulateUpload = () => {
-    // Generate a mock file object
-    const file = new File(["mock content"], "global-tech-trends.pdf", { type: "application/pdf" });
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!isAnalyzing) {
+      setIsDragging(true);
+    }
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (isAnalyzing) return;
+    
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+        setFileHelper(file);
+      } else {
+        setError("Only PDF files are currently supported.");
+      }
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFileHelper(file);
+    }
+  };
+
+  const setFileHelper = (file: File) => {
     setSelectedFile(file);
     setFileName(file.name);
+    
+    // Format file size
+    const sizeInMB = file.size / (1024 * 1024);
+    if (sizeInMB < 1) {
+      setFileSize(`${(file.size / 1024).toFixed(1)} KB`);
+    } else {
+      setFileSize(`${sizeInMB.toFixed(2)} MB`);
+    }
+    
     setHasFile(true);
+    setError(null);
   };
 
   const resetUpload = () => {
     setSelectedFile(null);
     setFileName('');
+    setFileSize('');
     setHasFile(false);
   };
 
@@ -232,9 +282,23 @@ function AnalyzeForm() {
               <div className="w-full">
                 {!hasFile ? (
                   <div 
-                    onClick={simulateUpload}
-                    className="border-2 border-dashed border-border-subtle rounded-[20px] bg-surface-secondary flex flex-col items-center justify-center py-16 px-4 text-center cursor-pointer hover:border-primary/50 transition-colors group"
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => document.getElementById('pdf-input')?.click()}
+                    className={`border-2 border-dashed rounded-[20px] bg-surface-secondary flex flex-col items-center justify-center py-16 px-4 text-center cursor-pointer transition-all duration-200 group ${
+                      isDragging 
+                        ? 'border-primary bg-primary/5 scale-[0.99]' 
+                        : 'border-border-subtle hover:border-primary/50'
+                    }`}
                   >
+                    <input 
+                      type="file" 
+                      id="pdf-input" 
+                      accept=".pdf" 
+                      onChange={handleFileChange} 
+                      className="hidden" 
+                    />
                     <span className="material-symbols-outlined text-4xl text-text-muted mb-4 group-hover:text-primary transition-colors">upload_file</span>
                     <p className="font-headline-md text-headline-md text-on-surface mb-2">Drag &amp; Drop your News PDF here</p>
                     <p className="font-body-md text-body-md text-text-muted mb-6">or click to browse from your computer</p>
@@ -249,18 +313,18 @@ function AnalyzeForm() {
                   <motion.div 
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="border border-border-subtle rounded-[20px] bg-surface-secondary p-6 flex items-center justify-between"
+                    className="border border-border-subtle rounded-[20px] bg-surface-secondary p-6 flex flex-col md:flex-row gap-4 items-center justify-between"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-16 bg-error-container rounded flex items-center justify-center text-on-error-container select-none">
+                    <div className="flex items-center gap-4 w-full md:w-auto">
+                      <div className="w-12 h-16 bg-error-container rounded flex items-center justify-center text-on-error-container select-none shrink-0">
                         <span className="material-symbols-outlined text-3xl">picture_as_pdf</span>
                       </div>
-                      <div>
-                        <p className="font-label-md text-label-md text-on-surface font-semibold truncate w-48">{fileName}</p>
-                        <p className="font-label-sm text-label-sm text-text-muted">2.4 MB • 12 pages</p>
+                      <div className="overflow-hidden">
+                        <p className="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[250px] md:max-w-[320px]">{fileName}</p>
+                        <p className="font-label-sm text-label-sm text-text-muted">{fileSize}</p>
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 w-full md:w-auto justify-end">
                       <button 
                         type="button"
                         onClick={resetUpload}
@@ -270,29 +334,60 @@ function AnalyzeForm() {
                       </button>
                       <button 
                         type="button"
+                        onClick={() => document.getElementById('pdf-input')?.click()}
+                        className="font-label-sm text-label-sm text-text-muted hover:text-primary px-3 py-2 transition-colors cursor-pointer"
+                      >
+                        Replace
+                      </button>
+                      <button 
+                        type="button"
                         onClick={() => triggerAnalysisFlow(null, selectedFile)}
                         className="bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg px-6 py-2 hover:bg-primary-container/95 transition-colors cursor-pointer"
                       >
                         Analyze
                       </button>
                     </div>
+                    {/* Hidden input to support replacing */}
+                    <input 
+                      type="file" 
+                      id="pdf-input" 
+                      accept=".pdf" 
+                      onChange={handleFileChange} 
+                      className="hidden" 
+                    />
                   </motion.div>
                 )}
               </div>
             )}
           </motion.div>
         ) : (
-          /* Loading Timeline View */
+          /* Loading Timeline View with Progress Bar */
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full flex flex-col gap-8"
+            className="w-full flex flex-col gap-6"
           >
-            <h3 className="font-headline-md text-headline-md font-bold mb-4 text-center text-primary animate-pulse">
+            <h3 className="font-headline-md text-headline-md font-bold text-center text-primary animate-pulse">
               Analyzing Document...
             </h3>
             
-            <div className="flex flex-col gap-6 ml-8">
+            {/* Real Progress Bar */}
+            <div className="w-full max-w-md mx-auto flex flex-col gap-2 mb-4">
+              <div className="w-full bg-surface-secondary h-2.5 rounded-full overflow-hidden border border-border-subtle">
+                <motion.div 
+                  className="bg-primary h-full rounded-full"
+                  initial={{ width: '0%' }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                />
+              </div>
+              <div className="flex justify-between font-label-sm text-label-sm text-text-muted px-1">
+                <span>Ingesting Content</span>
+                <span>{progress}%</span>
+              </div>
+            </div>
+            
+            <div className="flex flex-col gap-6 ml-8 max-w-md mx-auto">
               {timelineSteps.map((step) => {
                 const status = stepStatuses[step.id];
                 const isActive = status === 'active';

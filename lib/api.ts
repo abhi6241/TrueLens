@@ -6,6 +6,15 @@ export interface ClaimVerify {
   details: string;
 }
 
+export interface SimilarArticle {
+  id: string;
+  title: string;
+  author: string;
+  publication: string;
+  url?: string;
+  distance?: number;
+}
+
 export interface AnalysisResponse {
   id: string;
   url?: string;
@@ -22,7 +31,15 @@ export interface AnalysisResponse {
   is_sensational: boolean;
   is_verified_author: boolean;
   summary: string;
+  content?: string;
   claims: ClaimVerify[];
+  emotion: string;
+  propaganda_score: number;
+  propaganda_techniques: string[];
+  missing_perspectives: string[];
+  embedding_id?: string;
+  similar_articles?: SimilarArticle[];
+  is_bookmarked?: boolean;
   created_at: string;
 }
 
@@ -31,6 +48,14 @@ export interface DashboardStats {
   verified_facts: number;
   avg_trust_score: number;
   saved_reports: number;
+}
+
+export interface ListAnalysesParams {
+  limit?: number;
+  search?: string;
+  sort_by?: string;
+  order?: string;
+  is_bookmarked?: boolean;
 }
 
 let tokenProvider: (() => Promise<string | null>) | null = null;
@@ -66,8 +91,8 @@ export const api = {
     return res.data;
   },
 
-  async listAnalyses(): Promise<AnalysisResponse[]> {
-    const res = await apiClient.get<AnalysisResponse[]>('/analyze/');
+  async listAnalyses(params?: ListAnalysesParams): Promise<AnalysisResponse[]> {
+    const res = await apiClient.get<AnalysisResponse[]>('/analyze/', { params });
     return res.data;
   },
 
@@ -91,4 +116,14 @@ export const api = {
     });
     return res.data;
   },
+
+  async toggleBookmark(id: string): Promise<{ status: string, is_bookmarked: boolean }> {
+    const res = await apiClient.post(`/analyze/${id}/bookmark`);
+    return res.data;
+  },
+
+  async deleteAnalysis(id: string): Promise<{ status: string, message: string }> {
+    const res = await apiClient.delete(`/analyze/${id}`);
+    return res.data;
+  }
 };
