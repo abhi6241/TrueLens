@@ -1,0 +1,349 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#283044",
+                        "background": "#faf8ff",
+                        "on-tertiary-fixed": "#360f00",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "secondary": "#712ae2",
+                        "primary-fixed": "#dbe1ff",
+                        "surface-container-low": "#f2f3ff",
+                        "text-muted": "#64748B",
+                        "success": "#16A34A",
+                        "warning": "#F59E0B",
+                        "on-primary": "#ffffff",
+                        "surface-primary": "#FFFFFF",
+                        "on-secondary-fixed": "#25005a",
+                        "surface-container-highest": "#dae2fd",
+                        "surface": "#faf8ff",
+                        "on-tertiary-container": "#ffede6",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#d2bbff",
+                        "surface-container": "#eaedff",
+                        "on-background": "#131b2e",
+                        "danger": "#DC2626",
+                        "tertiary": "#943700",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#faf8ff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#5a00c6",
+                        "primary": "#004ac6",
+                        "surface-container-high": "#e2e7ff",
+                        "border-subtle": "#E2E8F0",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#bc4800",
+                        "inverse-primary": "#b4c5ff",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "on-surface-variant": "#434655",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#dae2fd",
+                        "on-primary-fixed": "#00174b",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-secondary": "#F8FAFC",
+                        "outline": "#737686",
+                        "primary-container": "#2563eb",
+                        "secondary-fixed": "#eaddff",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-surface": "#131b2e",
+                        "surface-dim": "#d2d9f4",
+                        "secondary-container": "#8a4cfc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "margin-mobile": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "container-max": "1280px",
+                        "margin-desktop": "2.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="flex">
+<!-- SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface-secondary border-r border-border-subtle flex flex-col gap-stack-md py-6 px-4 z-50">
+<!-- Header -->
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-size: 20px;">visibility</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TrueLens AI</h1>
+<p class="font-label-sm text-label-sm text-text-muted">Bias &amp; Transparency</p>
+</div>
+</div>
+<!-- CTA -->
+<button class="w-full bg-primary text-on-primary font-label-md text-label-md py-2.5 rounded-[12px] mb-6 hover:scale-95 duration-200 transition-transform">
+            New Analysis
+        </button>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-2 font-label-md text-label-md">
+<!-- Dashboard (Active) -->
+<a href="#" class="bg-primary-container/10 text-primary font-bold rounded-lg border-l-4 border-primary flex items-center gap-3 px-4 py-3 duration-200 ease-in-out">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </a>
+<!-- Analyze -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">analytics</span>
+                Analyze
+            </a>
+<!-- History -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">history</span>
+                History
+            </a>
+<!-- Bookmarks -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">bookmark</span>
+                Bookmarks
+            </a>
+<!-- Reports -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">assessment</span>
+                Reports
+            </a>
+</div>
+<div class="mt-auto flex flex-col gap-2 font-label-md text-label-md">
+<!-- Settings -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+<!-- Profile -->
+<a href="#" class="text-text-muted flex items-center gap-3 px-4 py-3 hover:bg-surface-container-high transition-all rounded-lg border-l-4 border-transparent duration-200 ease-in-out">
+<span class="material-symbols-outlined">person</span>
+                Profile
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface border-b border-border-subtle shadow-sm flex justify-between items-center px-6 h-16">
+<div class="flex items-center gap-4">
+<button class="text-text-muted hover:bg-surface-container rounded-full p-2 transition-transform active:scale-90 md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-md text-headline-md text-primary">Dashboard</h2>
+</div>
+<!-- Search (on_left relative to trailing actions, typically centered or spanning) -->
+<div class="flex-1 max-w-md mx-8 hidden md:block">
+<div class="relative w-full h-10 bg-surface-container-lowest border border-border-subtle rounded-[20px] flex items-center px-4">
+<span class="material-symbols-outlined text-text-muted mr-2" style="font-size: 18px;">search</span>
+<input type="text" placeholder="Search analysis..." class="w-full bg-transparent border-none focus:ring-0 font-body-md text-body-md text-on-surface placeholder:text-text-muted h-full">
+</div>
+</div>
+<div class="flex items-center gap-2">
+<!-- Notifications -->
+<button class="text-text-muted hover:bg-surface-container rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<!-- Contrast -->
+<button class="text-text-muted hover:bg-surface-container rounded-full p-2 transition-transform active:scale-90">
+<span class="material-symbols-outlined">contrast</span>
+</button>
+<div class="w-8 h-8 rounded-full ml-4 overflow-hidden border border-border-subtle bg-surface-container-high">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a person looking at the camera, neutral background, sharp focus, well lit, high resolution avatar image suitable for a business dashboard profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMqMCjK_eHMf3xj-UEQcFKckdJxDYZ3l-Nr3hVqilaGYJtBZ87zI-BbNtd0weHqtGE_mWM5u2AWQjGEGKH0ZShX5th0lQkfCnlUKlkEvaqGpyHmOZrMKD9Yr_4sCT40AtGwO4cb6_YerhzJCJwUaK01cOKo0vHt3v9mjs7yuYnlMrGrm0wKpXpYDouC-OJ5oQp6hLSofeDRucoJNk4a3vYmWZjwP0G9xrR_dzEOWanZl1QGrcabNf_">
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-margin-desktop bg-surface max-w-container-max mx-auto w-full">
+<!-- Quick Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-stack-lg">
+<!-- Articles Analyzed -->
+<div class="glass-card premium-shadow p-6 hover-lift flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-primary" style="font-size: 28px;">article</span>
+<span class="bg-surface-container text-primary font-label-sm text-label-sm px-2 py-1 rounded-full">+12% this week</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-text-muted mb-1">Total Analyzed</p>
+<h3 class="font-display text-display text-on-surface">1,248</h3>
+</div>
+</div>
+<!-- Trust Score Gauge -->
+<div class="glass-card premium-shadow p-6 hover-lift flex flex-col items-center justify-center md:col-span-1">
+<p class="font-label-md text-label-md text-text-muted w-full text-left mb-4">Avg Trust Score</p>
+<div class="relative w-32 h-32 flex items-center justify-center">
+<!-- SVG Gauge -->
+<svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+<!-- Background Circle -->
+<circle cx="50" cy="50" fill="none" r="40" stroke="#f2f3ff" stroke-width="8"></circle>
+<!-- Progress Circle (85%) -->
+<circle class="gauge-circle" cx="50" cy="50" fill="none" r="40" stroke="#004ac6" stroke-dasharray="251.2" stroke-dashoffset="37.68" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-headline-lg text-headline-lg text-primary">85</span>
+<span class="font-label-sm text-label-sm text-text-muted">/100</span>
+</div>
+</div>
+</div>
+<!-- Successful Checks -->
+<div class="glass-card premium-shadow p-6 hover-lift flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-success" style="font-size: 28px;">fact_check</span>
+<span class="bg-surface-container text-primary font-label-sm text-label-sm px-2 py-1 rounded-full">+45</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-text-muted mb-1">Verified Facts</p>
+<h3 class="font-display text-display text-on-surface">8,932</h3>
+</div>
+</div>
+<!-- Saved Reports -->
+<div class="glass-card premium-shadow p-6 hover-lift flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-secondary" style="font-size: 28px;">folder_special</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-text-muted mb-1">Saved Reports</p>
+<h3 class="font-display text-display text-on-surface">156</h3>
+</div>
+</div>
+</section>
+<!-- Recent Activity Table Section -->
+<section class="glass-card premium-shadow p-8 mb-stack-lg">
+<div class="flex justify-between items-end mb-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Recent Analysis</h3>
+<p class="font-body-md text-body-md text-text-muted">Latest articles processed by the engine.</p>
+</div>
+<button class="bg-surface-primary border border-border-subtle text-on-surface font-label-md text-label-md py-2 px-4 rounded-[12px] hover:bg-surface-secondary transition-colors">
+                        View All
+                    </button>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-subtle text-text-muted font-label-sm text-label-sm uppercase tracking-wider">
+<th class="pb-3 font-semibold w-1/2">Article Title</th>
+<th class="pb-3 font-semibold">Source</th>
+<th class="pb-3 font-semibold">Bias Rating</th>
+<th class="pb-3 font-semibold text-right">Trust Score</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-border-subtle">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-secondary transition-colors group">
+<td class="py-4 pr-4">
+<div class="font-medium text-on-surface group-hover:text-primary transition-colors cursor-pointer line-clamp-1">
+                                        Economic Policies Face New Scrutiny Amid Global Shifts
+                                    </div>
+<div class="text-text-muted font-label-sm text-label-sm mt-1">Analyzed 2 hours ago</div>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container rounded-full flex items-center justify-center text-[10px] text-text-muted font-bold">R</div>
+<span>Reuters</span>
+</div>
+</td>
+<td class="py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container text-primary">
+                                        Center
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<span class="inline-flex items-center gap-1 text-success font-medium">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+                                        92/100
+                                    </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-secondary transition-colors group">
+<td class="py-4 pr-4">
+<div class="font-medium text-on-surface group-hover:text-primary transition-colors cursor-pointer line-clamp-1">
+                                        The Hidden Costs of the New Tech Infrastructure Bill
+                                    </div>
+<div class="text-text-muted font-label-sm text-label-sm mt-1">Analyzed 4 hours ago</div>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container rounded-full flex items-center justify-center text-[10px] text-text-muted font-bold">NY</div>
+<span>NY Times</span>
+</div>
+</td>
+<td class="py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-primary/10 text-primary">
+                                        Lean Left
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<span class="inline-flex items-center gap-1 text-warning font-medium">
+<span class="material-symbols-outlined text-[16px]">info</span>
+                                        78/100
+                                    </span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-secondary transition-colors group">
+<td class="py-4 pr-4">
+<div class="font-medium text-on-surface group-hover:text-primary transition-colors cursor-pointer line-clamp-1">
+                                        Market Reactions to the Recent Federal Reserve Rate Hike
+                                    </div>
+<div class="text-text-muted font-label-sm text-label-sm mt-1">Analyzed 5 hours ago</div>
+</td>
+<td class="py-4">
+<div class="flex items-center gap-2">
+<div class="w-5 h-5 bg-surface-container rounded-full flex items-center justify-center text-[10px] text-text-muted font-bold">WS</div>
+<span>WSJ</span>
+</div>
+</td>
+<td class="py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-sm text-label-sm bg-danger/10 text-danger">
+                                        Lean Right
+                                    </span>
+</td>
+<td class="py-4 text-right">
+<span class="inline-flex items-center gap-1 text-success font-medium">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+                                        88/100
+                                    </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</body></html>
