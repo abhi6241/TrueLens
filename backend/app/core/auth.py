@@ -23,7 +23,10 @@ class ClerkJWTValidator:
         self.jwk_client = None
         if self.jwks_url:
             try:
-                self.jwk_client = PyJWKClient(self.jwks_url)
+                headers = {}
+                if settings.CLERK_SECRET_KEY:
+                    headers["Authorization"] = f"Bearer {settings.CLERK_SECRET_KEY}"
+                self.jwk_client = PyJWKClient(self.jwks_url, headers=headers)
             except Exception as e:
                 logger.error(f"Failed to initialize Clerk JWK Client: {e}")
 
