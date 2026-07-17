@@ -1,154 +1,142 @@
 import uuid
+import json
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, status, BackgroundTasks, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, desc
 
-from app.db.session import get_db
+from app.db.session import get_db, db_manager
 from app.models.analysis import Analysis
-from app.schemas.analysis import AnalysisCreate, AnalysisResponse, DashboardStats, ClaimVerify
+from app.schemas.analysis import AnalysisCreate, AnalysisResponse, DashboardStats, ClaimVerify, TaskResponse, TaskStatus
 from app.core.auth import get_current_user
 from app.models.user import User
 from app.core.ingestion import ingest_from_url, ingest_from_pdf
 from app.models.article import Article
 from app.services import analysis_pipeline, embedding_service
-
-
+from app.services.task_service import set_task_status, get_task_status
+from app.core.rate_limit import limiter
+from app.db.redis import redis_client
 
 router = APIRouter()
 
-@router.post("/", response_model=AnalysisResponse, status_code=status.HTTP_201_CREATED)
+import asyncio
+
+async def run_analysis_task(task_id: str, url: Optional[str], filename: Optional[str], file_bytes: Optional[bytes], user_id: str):
+    """Background task to run the full analysis pipeline."""
+    try:
+        await set_task_status(task_id, "processing", 5, "Ingesting content...")
+        
+        # 1. Ingestion
+        if url:
+            article_data = await asyncio.to_thread(ingest_from_url, url)
+        else:
+            article_data = await asyncio.to_thread(ingest_from_pdf, file_bytes, filename)
+            
+        async with db_manager.session_maker() as session:
+            # 2. Store Article
+            article = Article(
+                title=article_data["title"],
+                content=article_data["content"],
+                author=article_data["author"],
+                publication=article_data["publication"],
+                published_date=article_data["published_date"],
+                url=url,
+                filename=filename,
+                user_id=user_id
+            )
+            session.add(article)
+            await session.flush()
+            
+            # 3. Process through AI Pipeline
+            async def progress_cb(msg: str, prog: int):
+                await set_task_status(task_id, "processing", prog, msg)
+                
+            pipeline_result = await analysis_pipeline.analyze(article_data, article.id, progress_callback=progress_cb)
+            
+            # 4. Store Analysis result
+            analysis = Analysis(
+                id=str(uuid.uuid4()),
+                url=url,
+                filename=filename,
+                title=pipeline_result.title,
+                author=pipeline_result.author,
+                publication=pipeline_result.publication,
+                published_date=pipeline_result.published_date,
+                trust_score=pipeline_result.trust_score,
+                bias_rating=pipeline_result.bias_rating,
+                sentiment_tone=pipeline_result.sentiment_tone,
+                sentiment_score=pipeline_result.sentiment_score,
+                is_clickbait=pipeline_result.is_clickbait,
+                is_sensational=pipeline_result.is_sensational,
+                is_verified_author=pipeline_result.is_verified_author,
+                summary=pipeline_result.summary,
+                claims=pipeline_result.claims,
+                emotion=pipeline_result.emotion,
+                propaganda_score=pipeline_result.propaganda_score,
+                propaganda_techniques=pipeline_result.propaganda_techniques,
+                missing_perspectives=pipeline_result.missing_perspectives,
+                embedding_id=pipeline_result.embedding_id,
+                user_id=user_id,
+                article_id=article.id
+            )
+            
+            session.add(analysis)
+            await session.commit()
+            
+            # Invalidate Caches
+            await redis_client.delete(f"cache:list_analyses:{user_id}")
+            await redis_client.delete(f"cache:dashboard_stats:{user_id}")
+            
+            # Finish Task
+            await set_task_status(task_id, "completed", 100, "Analysis complete", result_id=analysis.id)
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        await set_task_status(task_id, "failed", 0, "An error occurred during analysis.", error=str(e))
+
+@router.post("/", response_model=TaskResponse, status_code=status.HTTP_202_ACCEPTED)
 async def analyze_url(
+    request: Request,
     payload: AnalysisCreate, 
-    db: AsyncSession = Depends(get_db),
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user)
 ):
     url = payload.url
     if not url:
         raise HTTPException(status_code=400, detail="URL cannot be empty")
+        
+    task_id = str(uuid.uuid4())
+    await set_task_status(task_id, "pending", 0, "Task queued...")
+    background_tasks.add_task(run_analysis_task, task_id, url, None, None, current_user.id)
     
-    # 1. Run real URL ingestion
-    try:
-        article_data = ingest_from_url(url)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Failed to ingest content from URL: {str(e)}"
-        )
-    
-    # 2. Store Article record in PostgreSQL
-    article = Article(
-        title=article_data["title"],
-        content=article_data["content"],
-        author=article_data["author"],
-        publication=article_data["publication"],
-        published_date=article_data["published_date"],
-        url=url,
-        user_id=current_user.id
-    )
-    db.add(article)
-    await db.flush() # Retrieve generated UUID
-    
-    # 3. Process through AI Pipeline
-    pipeline_result = await analysis_pipeline.analyze(article_data, article.id)
-    
-    # 4. Store Analysis result
-    analysis = Analysis(
-        id=str(uuid.uuid4()),
-        url=url,
-        title=pipeline_result.title,
-        author=pipeline_result.author,
-        publication=pipeline_result.publication,
-        published_date=pipeline_result.published_date,
-        trust_score=pipeline_result.trust_score,
-        bias_rating=pipeline_result.bias_rating,
-        sentiment_tone=pipeline_result.sentiment_tone,
-        sentiment_score=pipeline_result.sentiment_score,
-        is_clickbait=pipeline_result.is_clickbait,
-        is_sensational=pipeline_result.is_sensational,
-        is_verified_author=pipeline_result.is_verified_author,
-        summary=pipeline_result.summary,
-        claims=pipeline_result.claims,
-        emotion=pipeline_result.emotion,
-        propaganda_score=pipeline_result.propaganda_score,
-        propaganda_techniques=pipeline_result.propaganda_techniques,
-        missing_perspectives=pipeline_result.missing_perspectives,
-        embedding_id=pipeline_result.embedding_id,
-        user_id=current_user.id,
-        article_id=article.id
-    )
-    
-    db.add(analysis)
-    await db.commit()
-    await db.refresh(analysis)
-    return analysis
+    return {"task_id": task_id, "status": "pending", "message": "Analysis queued for background processing."}
 
-@router.post("/upload", response_model=AnalysisResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/upload", response_model=TaskResponse, status_code=status.HTTP_202_ACCEPTED)
 async def analyze_file(
+    request: Request,
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...), 
-    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     filename = file.filename
     if not filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF file uploads are currently supported.")
         
-    # 1. Run real PDF ingestion
-    try:
-        file_bytes = await file.read()
-        article_data = ingest_from_pdf(file_bytes, filename)
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Failed to parse PDF document: {str(e)}"
-        )
-        
-    # 2. Store Article record in PostgreSQL
-    article = Article(
-        title=article_data["title"],
-        content=article_data["content"],
-        author=article_data["author"],
-        publication=article_data["publication"],
-        published_date=article_data["published_date"],
-        filename=filename,
-        user_id=current_user.id
-    )
-    db.add(article)
-    await db.flush()
+    file_bytes = await file.read()
     
-    # 3. Process through AI Pipeline
-    pipeline_result = await analysis_pipeline.analyze(article_data, article.id)
+    task_id = str(uuid.uuid4())
+    await set_task_status(task_id, "pending", 0, "Task queued...")
+    background_tasks.add_task(run_analysis_task, task_id, None, filename, file_bytes, current_user.id)
     
-    # 4. Store Analysis record
-    analysis = Analysis(
-        id=str(uuid.uuid4()),
-        filename=filename,
-        title=pipeline_result.title,
-        author=pipeline_result.author,
-        publication=pipeline_result.publication,
-        published_date=pipeline_result.published_date,
-        trust_score=pipeline_result.trust_score,
-        bias_rating=pipeline_result.bias_rating,
-        sentiment_tone=pipeline_result.sentiment_tone,
-        sentiment_score=pipeline_result.sentiment_score,
-        is_clickbait=pipeline_result.is_clickbait,
-        is_sensational=pipeline_result.is_sensational,
-        is_verified_author=pipeline_result.is_verified_author,
-        summary=pipeline_result.summary,
-        claims=pipeline_result.claims,
-        emotion=pipeline_result.emotion,
-        propaganda_score=pipeline_result.propaganda_score,
-        propaganda_techniques=pipeline_result.propaganda_techniques,
-        missing_perspectives=pipeline_result.missing_perspectives,
-        embedding_id=pipeline_result.embedding_id,
-        user_id=current_user.id,
-        article_id=article.id
-    )
-    
-    db.add(analysis)
-    await db.commit()
-    await db.refresh(analysis)
-    return analysis
+    return {"task_id": task_id, "status": "pending", "message": "Analysis queued for background processing."}
+
+@router.get("/task/{task_id}", response_model=TaskStatus)
+async def get_task(task_id: str):
+    status_data = await get_task_status(task_id)
+    if not status_data:
+        raise HTTPException(status_code=404, detail="Task not found or expired")
+    return status_data
 
 @router.get("/", response_model=List[AnalysisResponse])
 async def list_analyses(
@@ -160,6 +148,14 @@ async def list_analyses(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    # Setup cache key (only caching if no complex search filters)
+    cache_key = f"cache:list_analyses:{current_user.id}" if not search and is_bookmarked is None else None
+    
+    if cache_key:
+        cached_data = await redis_client.get(cache_key)
+        if cached_data:
+            return json.loads(cached_data)
+
     query = select(Analysis).where(Analysis.user_id == current_user.id)
     
     if search:
@@ -188,6 +184,19 @@ async def list_analyses(
     result = await db.execute(query)
     analyses = result.scalars().all()
     
+    # Convert to dict for caching
+    analyses_dicts = []
+    for analysis in analyses:
+        analysis_dict = {c.name: getattr(analysis, c.name) for c in analysis.__table__.columns} if hasattr(analysis, "__table__") else vars(analysis).copy()
+        if "_sa_instance_state" in analysis_dict:
+            del analysis_dict["_sa_instance_state"]
+        # convert datetime to string
+        analysis_dict["created_at"] = analysis.created_at.isoformat() if analysis.created_at else None
+        analyses_dicts.append(analysis_dict)
+
+    if cache_key:
+        await redis_client.set(cache_key, json.dumps(analyses_dicts), expire=300) # cache for 5 min
+    
     return analyses
 
 @router.get("/dashboard/stats", response_model=DashboardStats)
@@ -195,6 +204,11 @@ async def get_dashboard_stats(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    cache_key = f"cache:dashboard_stats:{current_user.id}"
+    cached_data = await redis_client.get(cache_key)
+    if cached_data:
+        return json.loads(cached_data)
+
     # Calculate stats from DB specifically for the logged-in user
     result_count = await db.execute(
         select(func.count(Analysis.id)).where(Analysis.user_id == current_user.id)
@@ -207,11 +221,6 @@ async def get_dashboard_stats(
     avg_score = result_avg.scalar()
     avg_trust_score = int(round(avg_score)) if avg_score is not None else 0
     
-    # Calculate total verified claims for the user
-    # Note: SQLite/PostgreSQL JSON querying can be complex. For simplicity and DB agnosticism, 
-    # we'll fetch the claims for the user and count them in python if it's not a huge dataset,
-    # but a better approach for large scale is a separate Claims table.
-    # Since this is a lightweight prototype, we'll fetch analyses for the user and count.
     all_user_analyses_result = await db.execute(select(Analysis.claims).where(Analysis.user_id == current_user.id))
     all_claims = all_user_analyses_result.scalars().all()
     verified_facts = 0
@@ -219,19 +228,20 @@ async def get_dashboard_stats(
         if isinstance(claims_list, list):
             verified_facts += sum(1 for c in claims_list if isinstance(c, dict) and c.get("status") == "Verified")
             
-    # Count bookmarked
     result_bookmarked = await db.execute(
         select(func.count(Analysis.id)).where((Analysis.user_id == current_user.id) & (Analysis.is_bookmarked == True))
     )
     saved_reports = result_bookmarked.scalar() or 0
     
-    stats = DashboardStats(
-        total_analyzed=total_analyzed,
-        verified_facts=verified_facts,
-        avg_trust_score=avg_trust_score,
-        saved_reports=saved_reports
-    )
-    return stats
+    stats_dict = {
+        "total_analyzed": total_analyzed,
+        "verified_facts": verified_facts,
+        "avg_trust_score": avg_trust_score,
+        "saved_reports": saved_reports
+    }
+    
+    await redis_client.set(cache_key, json.dumps(stats_dict), expire=300) # cache for 5 min
+    return stats_dict
 
 @router.get("/{analysis_id}", response_model=AnalysisResponse)
 async def get_analysis(
@@ -249,7 +259,6 @@ async def get_analysis(
             detail=f"Analysis report with ID {analysis_id} not found."
         )
         
-    # Enforce security scope: only allow access to user's own reports or public reports
     if analysis.user_id and analysis.user_id != current_user.id:
         raise HTTPException(
             status_code=403,
@@ -259,14 +268,11 @@ async def get_analysis(
     # Fetch similar articles using embedding_service
     similar_articles = []
     if analysis.content:
-        # We need the article's text, which is accessed via the relationship analysis.article.content (already a property on the model)
-        # However, to avoid lazy loading issues, we can check if it exists or use the summary if content is not available.
         search_text = analysis.content if analysis.content else analysis.summary
         if search_text:
             results = embedding_service.search_similar(search_text, top_k=6)
             for res in results:
                 metadata = res.get("metadata", {})
-                # Skip the exact same article
                 if metadata.get("article_id") == analysis.article_id:
                     continue
                     
@@ -281,39 +287,13 @@ async def get_analysis(
                 if len(similar_articles) == 5:
                     break
     
-    # We must construct a dict or modify the Pydantic model response
-    # Because similar_articles is not a Column, it's easier to convert the SQLAlchemy object to dict and update it.
-    analysis_dict = {c.name: getattr(analysis, c.name) for c.__class__ in analysis.__table__.columns} if hasattr(analysis, "__table__") else vars(analysis).copy()
+    analysis_dict = {c.name: getattr(analysis, c.name) for c in analysis.__table__.columns} if hasattr(analysis, "__table__") else vars(analysis).copy()
     if "_sa_instance_state" in analysis_dict:
         del analysis_dict["_sa_instance_state"]
         
-    analysis_dict = {
-        "id": analysis.id,
-        "url": analysis.url,
-        "filename": analysis.filename,
-        "title": analysis.title,
-        "author": analysis.author,
-        "publication": analysis.publication,
-        "published_date": analysis.published_date,
-        "trust_score": analysis.trust_score,
-        "bias_rating": analysis.bias_rating,
-        "sentiment_tone": analysis.sentiment_tone,
-        "sentiment_score": analysis.sentiment_score,
-        "is_clickbait": analysis.is_clickbait,
-        "is_sensational": analysis.is_sensational,
-        "is_verified_author": analysis.is_verified_author,
-        "summary": analysis.summary,
-        "content": analysis.content,
-        "claims": analysis.claims,
-        "emotion": analysis.emotion,
-        "propaganda_score": analysis.propaganda_score,
-        "propaganda_techniques": analysis.propaganda_techniques,
-        "missing_perspectives": analysis.missing_perspectives,
-        "embedding_id": analysis.embedding_id,
-        "is_bookmarked": analysis.is_bookmarked,
-        "created_at": analysis.created_at,
+    analysis_dict.update({
         "similar_articles": similar_articles
-    }
+    })
     
     return analysis_dict
 
@@ -333,6 +313,10 @@ async def toggle_bookmark(
     analysis.is_bookmarked = not analysis.is_bookmarked
     await db.commit()
     
+    # Invalidate Caches
+    await redis_client.delete(f"cache:list_analyses:{current_user.id}")
+    await redis_client.delete(f"cache:dashboard_stats:{current_user.id}")
+    
     return {"status": "success", "is_bookmarked": analysis.is_bookmarked}
 
 @router.delete("/{analysis_id}", response_model=dict)
@@ -351,5 +335,8 @@ async def delete_analysis(
     await db.delete(analysis)
     await db.commit()
     
+    # Invalidate Caches
+    await redis_client.delete(f"cache:list_analyses:{current_user.id}")
+    await redis_client.delete(f"cache:dashboard_stats:{current_user.id}")
+    
     return {"status": "success", "message": "Analysis deleted"}
-

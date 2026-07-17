@@ -1,9 +1,14 @@
 import time
 import logging
 import sys
+import json
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 
 from app.core.config import settings
 from app.db.session import db_manager, Base
@@ -17,16 +22,27 @@ from app.models.user import User
 from app.models.analysis import Analysis
 from app.models.article import Article
 
+# Configure Structured JSON Logging
+class JSONLogFormatter(logging.Formatter):
+    def format(self, record):
+        log_obj = {
+            "time": self.formatTime(record, self.datefmt),
+            "name": record.name,
+            "level": record.levelname,
+            "message": record.getMessage()
+        }
+        if record.exc_info:
+            log_obj["exc_info"] = self.formatException(record.exc_info)
+        return json.dumps(log_obj)
 
-# Configure Logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout)
-    ]
-)
+handler = logging.StreamHandler(sys.stdout)
+file_handler = logging.FileHandler("backend.log")
+handler.setFormatter(JSONLogFormatter())
+file_handler.setFormatter(JSONLogFormatter())
+logging.basicConfig(level=logging.INFO, handlers=[handler, file_handler])
 logger = logging.getLogger("truelens")
+
+from app.core.rate_limit import limiter
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -34,6 +50,9 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # Set CORS middleware
 app.add_middleware(

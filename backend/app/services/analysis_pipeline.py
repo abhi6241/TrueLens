@@ -45,22 +45,34 @@ class AnalysisPipeline:
         self.embedding = embedding
         self.factcheck = factcheck
 
-    async def analyze(self, article_data: dict, article_id: str) -> AnalysisResult:
+    async def analyze(self, article_data: dict, article_id: str, progress_callback=None) -> AnalysisResult:
         title = article_data.get("title", "")
         content = article_data.get("content", "")
         author = article_data.get("author", "Unknown")
         publication = article_data.get("publication", "Unknown")
         published_date = article_data.get("published_date", "Unknown")
 
+        if progress_callback:
+            await progress_callback("Extracting textual features...", 10)
+
         # 1. NLP Preprocessing (extract sentences for sentiment)
-        sentences = self.nlp.extract_sentences(content)
+        sentences = await asyncio.to_thread(self.nlp.extract_sentences, content)
         
+        if progress_callback:
+            await progress_callback("Analyzing sentiment...", 20)
+            
         # 2. Sentiment Analysis
-        sentiment_result = self.sentiment.analyze(sentences)
+        sentiment_result = await asyncio.to_thread(self.sentiment.analyze, sentences)
         
+        if progress_callback:
+            await progress_callback("Running AI heuristics and extraction...", 40)
+            
         # 3. Gemini Structured Analysis
         gemini_result = await self.gemini.analyze(title, content)
         
+        if progress_callback:
+            await progress_callback("Generating embeddings for similarity search...", 60)
+            
         # 4. Generate Embedding and Store in ChromaDB
         metadata = {
             "title": title,
@@ -71,10 +83,13 @@ class AnalysisPipeline:
         
         embedding_id = None
         try:
-            embedding_id = self.embedding.store_article(article_id, content, metadata)
+            embedding_id = await asyncio.to_thread(self.embedding.store_article, article_id, content, metadata)
         except Exception as e:
             logger.error(f"Failed to store embedding: {e}")
 
+        if progress_callback:
+            await progress_callback("Fact-checking extracted claims...", 80)
+            
         # 5. Fact Check claims
         claims = []
         if "claims" in gemini_result:
@@ -95,6 +110,9 @@ class AnalysisPipeline:
                         "status": status,
                         "details": details
                     })
+                    
+        if progress_callback:
+            await progress_callback("Finalizing analysis...", 95)
 
         # Combine results
         return AnalysisResult(

@@ -52,3 +52,16 @@ class DashboardStats(BaseModel):
     verified_facts: int
     avg_trust_score: int
     saved_reports: int
+
+class TaskStatus(BaseModel):
+    task_id: str
+    status: str
+    progress: int
+    message: str
+    result_id: Optional[str] = None
+    error: Optional[str] = None
+
+class TaskResponse(BaseModel):
+    task_id: str
+    status: str
+    message: str
