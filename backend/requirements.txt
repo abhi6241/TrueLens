@@ -89,7 +89,6 @@ newspaper4k==0.9.4.1
 nltk==3.10.0
 numpy==2.5.1
 oauthlib==3.3.1
-onnxruntime==1.27.0
 opentelemetry-api==1.44.0
 opentelemetry-exporter-otlp-proto-common==1.44.0
 opentelemetry-exporter-otlp-proto-grpc==1.44.0
@@ -143,8 +142,6 @@ smart_open==8.0.1
 sniffio==1.3.1
 soupsieve==2.8.4
 spacy==3.8.13
-spacy-legacy==3.0.12
-spacy-loggers==1.0.5
 SQLAlchemy==2.0.51
 srsly==2.5.3
 standardwebhooks==1.0.1
@@ -157,10 +154,8 @@ threadpoolctl==3.6.0
 tld==0.13.2
 tldextract==5.3.1
 tokenizers==0.22.2
-torch==2.13.0
 tqdm==4.68.4
 trafilatura==2.1.0
-transformers==5.14.1
 typer==0.27.0
 types-Deprecated==1.3.1.20260520
 types-python-dateutil==2.9.0.20260716
